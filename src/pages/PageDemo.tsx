@@ -3,12 +3,14 @@ import { useReducer } from "react";
 interface IState {
 	count: number;
 	title: string;
+	history: string[];
 	error: string;
 }
 
 const initialState: IState = {
 	count: 0,
 	title: "The useReducer/reducer Demo",
+	history: [],
 	error: "",
 };
 
@@ -27,6 +29,7 @@ const reducer = (state: IState, action: INumberAction | IStringAction) => {
 	switch (action.type) {
 		case "increment":
 			_state.count += action.payload;
+			_state.history.push(`added ${action.payload}`)
 			break;
 		case "decrement":
 			_state.count -= action.payload;
@@ -46,7 +49,7 @@ export const PageDemo = () => {
 	return (
 		<>
 			<h2 className="text-2xl mb-3">{state.title}</h2>
-			<div className="flex gap-3">
+			<div className="flex gap-3 mb-3">
 				<button
 					onClick={() => dispatch({ type: "decrement", payload: 1 })}
 				>
@@ -59,8 +62,16 @@ export const PageDemo = () => {
 				</button>
 				<p className="text-xl mt-1">count = {state.count}</p>
 			</div>
-			<div>
+			<div className="mb-3">
 				Change title: <input className="w-80" value={state.title} onChange={(e) => dispatch({type: 'setTitle', payload: e.target.value})} type="text"/>
+			</div>
+			<div>
+				<h2 className="text-2xl mb-3">History</h2>
+				{state.history.map((historyItem, index) => {
+					return (
+						<p key={index}>{historyItem}</p>
+					)
+				})}
 			</div>
 		</>
 	);
