@@ -1,3 +1,9 @@
-- .. setup setCart in AppContext
-- in PageBooks
-	- onClick, fill setCart with book
+- .. display books in groups, e.g. "2x bash Cookbook"
+	- x make cartGroupedItems array
+		[
+			{
+				book: {...}
+				amount: 2
+			}
+		]
+	- .. create useEffect that observes cart, when cart changes, recreate cartGroupedItems

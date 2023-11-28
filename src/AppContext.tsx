@@ -1,5 +1,5 @@
 import { createContext, useEffect, useState } from "react";
-import { IBook, ICart } from "./interfaces";
+import { IBook, ICart, ICartGroupedItem } from "./interfaces";
 import axios from "axios";
 
 interface IAppContext {
@@ -9,6 +9,7 @@ interface IAppContext {
 	setBooks: (books: IBook[]) => void;
 	cart: ICart;
 	handleAddBookToCart: (book: IBook) => void;
+	cartGroupedItems: ICartGroupedItem[];
 }
 
 interface IAppProvider {
@@ -23,6 +24,9 @@ export const AppProvider: React.FC<IAppProvider> = ({ children }) => {
 	const [userName, setUserName] = useState("");
 	const [books, setBooks] = useState<IBook[]>([]);
 	const [cart, setCart] = useState<ICart>({ items: [] } as ICart);
+	const [cartGroupedItems, setCartGroupedItems] = useState<
+		ICartGroupedItem[]
+	>([]);
 
 	useEffect(() => {
 		setTimeout(async () => {
@@ -31,6 +35,15 @@ export const AppProvider: React.FC<IAppProvider> = ({ children }) => {
 			setBooks(_books);
 		}, 2000);
 	}, []);
+
+	useEffect(() => {
+		const _cartGroupedItems: ICartGroupedItem[] = [];
+		
+		for (const book of cart.items) {
+			_cartGroupedItems.push({ book, amount: 999 });
+		}
+		setCartGroupedItems(_cartGroupedItems);
+	}, [cart]);
 
 	const handleAddBookToCart = (book: IBook) => {
 		const _cart = structuredClone(cart);
@@ -47,6 +60,7 @@ export const AppProvider: React.FC<IAppProvider> = ({ children }) => {
 				setBooks,
 				cart,
 				handleAddBookToCart,
+				cartGroupedItems,
 			}}
 		>
 			{children}
