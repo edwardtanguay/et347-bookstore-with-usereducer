@@ -1,0 +1,3 @@
+- .. setup setCart in AppContext
+- in PageBooks
+	- onClick, fill setCart with book
