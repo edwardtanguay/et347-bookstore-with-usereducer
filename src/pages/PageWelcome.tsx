@@ -2,7 +2,7 @@ import { useContext } from "react";
 import { AppContext } from "../AppContext";
 
 export const PageWelcome = () => {
-	const { state, dispatch, books, cart } = useContext(AppContext);
+	const { state, dispatch, cart } = useContext(AppContext);
 
 	return (
 		<>
@@ -19,7 +19,7 @@ export const PageWelcome = () => {
 				/>
 			</div>
 			<p>
-				We have {books.length} books available, and {cart.items.length} are in your cart. 
+				We have {state.books.length} books available, and {cart.items.length} are in your cart. 
 			</p>
 		</>
 	);

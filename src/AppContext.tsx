@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { createContext, useEffect, useState, useReducer } from "react";
 import { IBook, ICart, ICartGroupedItem } from "./interfaces";
@@ -5,6 +6,7 @@ import axios from "axios";
 
 interface IState {
 	userName: string;
+	books: IBook[];
 }
 
 interface IStringAction {
@@ -12,25 +14,31 @@ interface IStringAction {
 	payload: string;
 }
 
-const initialState = {
-	userName: ''
+interface IBooksAction {
+	type: 'setBooks';
+	payload: IBook[];
 }
 
-const reducer = (state: IState, action: IStringAction) => {
+const initialState = {
+	userName: '',
+	books: []
+}
+
+const reducer = (state: IState, action: IStringAction | IBooksAction) => {
 	const _state = structuredClone(state);
 
 	switch (action.type) {
 		case 'setUserName':
 			_state.userName = action.payload;
 			break;
+		case 'setBooks':
+			_state.books = action.payload;
 	}
 
 	return _state;
 } 
 
 interface IAppContext {
-	books: IBook[];
-	setBooks: (books: IBook[]) => void;
 	cart: ICart;
 	handleAddBookToCart: (book: IBook) => void;
 	cartGroupedItems: ICartGroupedItem[];
@@ -48,7 +56,6 @@ export const AppContext = createContext<IAppContext>({} as IAppContext);
 
 export const AppProvider: React.FC<IAppProvider> = ({ children }) => {
 	const [state, dispatch] = useReducer(reducer, initialState);
-	const [books, setBooks] = useState<IBook[]>([]);
 	const [cart, setCart] = useState<ICart>({ items: [] } as ICart);
 	const [cartGroupedItems, setCartGroupedItems] = useState<
 		ICartGroupedItem[]
@@ -58,7 +65,7 @@ export const AppProvider: React.FC<IAppProvider> = ({ children }) => {
 		setTimeout(async () => {
 			const response = await axios.get(booksUrl);
 			const _books = response.data;
-			setBooks(_books);
+			dispatch({type: 'setBooks', payload: _books})
 		}, 0);
 	}, []);
 
@@ -74,7 +81,7 @@ export const AppProvider: React.FC<IAppProvider> = ({ children }) => {
 		}
 		const properties = Object.entries(countObj);
 		for (const [idCode, _amount] of properties) {
-			const book = books.find((m: IBook) => m.idCode === idCode);
+			const book = state.books.find((m: IBook) => m.idCode === idCode);
 			const amount = _amount as number;
 			if (book) {
 				_cartGroupedItems.push({
@@ -95,8 +102,6 @@ export const AppProvider: React.FC<IAppProvider> = ({ children }) => {
 	return (
 		<AppContext.Provider
 			value={{
-				books,
-				setBooks,
 				cart,
 				handleAddBookToCart,
 				cartGroupedItems,

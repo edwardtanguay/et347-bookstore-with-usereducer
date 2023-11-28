@@ -2,15 +2,15 @@ import { useContext } from "react";
 import { AppContext } from "../AppContext";
 
 export const PageBooks = () => {
-	const { state, books, handleAddBookToCart, cart } = useContext(AppContext);
+	const { state, handleAddBookToCart, cart } = useContext(AppContext);
 	return (
 		<>
 			{state.userName && <p>Hallo, {state.userName}, please select your books!</p>}
 
-			<p className="mb-4">There are {books.length} books.</p>
+			<p className="mb-4">There are {state.books.length} books.</p>
 
 			<div className="flex gap-3 flex-wrap">
-				{books.map((book) => {
+				{state.books.map((book) => {
 					return (
 						<div className="flex flex-col" key={book.id}>
 							<img
