@@ -11,6 +11,7 @@ import { PageBooks } from "./pages/PageBooks.tsx";
 import { Page404 } from "./pages/Page404.tsx";
 import { PageCheckout } from "./pages/PageCheckout.tsx";
 import { AppProvider } from "./AppContext.tsx";
+import { PageDemo } from "./pages/PageDemo.tsx";
 
 const router = createBrowserRouter([
 	{
@@ -29,6 +30,10 @@ const router = createBrowserRouter([
 			{
 				path: "checkout",
 				element: <PageCheckout />
+			},
+			{
+				path: "demo",
+				element: <PageDemo />
 			},
 			{
 				path: "/",
