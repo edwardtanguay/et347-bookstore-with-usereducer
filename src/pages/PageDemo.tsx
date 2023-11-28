@@ -29,13 +29,15 @@ const reducer = (state: IState, action: INumberAction | IStringAction) => {
 	switch (action.type) {
 		case "increment":
 			_state.count += action.payload;
-			_state.history.push(`added ${action.payload}`)
+			_state.history.push(`added ${action.payload}`);
 			break;
 		case "decrement":
 			_state.count -= action.payload;
+			_state.history.push(`subtracted ${action.payload}`);
 			break;
 		case "setTitle":
 			_state.title = action.payload;
+			_state.history.push(`changed title to: ${action.payload}`);
 			break;
 		default:
 			_state.error = "bad action type"; // TODO: figure out how to display action.type, it got a typescript error
@@ -63,14 +65,20 @@ export const PageDemo = () => {
 				<p className="text-xl mt-1">count = {state.count}</p>
 			</div>
 			<div className="mb-3">
-				Change title: <input className="w-80" value={state.title} onChange={(e) => dispatch({type: 'setTitle', payload: e.target.value})} type="text"/>
+				Change title:{" "}
+				<input
+					className="w-80"
+					value={state.title}
+					onChange={(e) =>
+						dispatch({ type: "setTitle", payload: e.target.value })
+					}
+					type="text"
+				/>
 			</div>
 			<div>
 				<h2 className="text-2xl mb-3">History</h2>
 				{state.history.map((historyItem, index) => {
-					return (
-						<p key={index}>{historyItem}</p>
-					)
+					return <p key={index}>{historyItem}</p>;
 				})}
 			</div>
 		</>
