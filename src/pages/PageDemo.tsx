@@ -6,7 +6,7 @@ interface IState {
 }
 
 const initialState: IState = {
-	count: 999,
+	count: 0,
 	error: "",
 };
 
@@ -33,5 +33,14 @@ const reducer = (state: IState, action: IAction) => {
 export const PageDemo = () => {
 	const [state] = useReducer(reducer, initialState);
 
-	return <p>this is the demo page, count = {state.count}</p>;
+	return (
+		<>
+		<h2 className="text-2xl mb-3">Demo of useReducer</h2>
+			<div className="flex gap-3">
+				<button>-</button>
+				<button>+</button>
+				<p className="text-xl mt-1">count = {state.count}</p>
+		</div>
+		</>
+	)
 };
