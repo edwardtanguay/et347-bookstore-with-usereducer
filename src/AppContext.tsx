@@ -13,7 +13,7 @@ interface IStringAction {
 }
 
 const initialState = {
-	userName: 'nnn'
+	userName: ''
 }
 
 const reducer = (state: IState, action: IStringAction) => {
@@ -29,8 +29,6 @@ const reducer = (state: IState, action: IStringAction) => {
 } 
 
 interface IAppContext {
-	userName: string;
-	setUserName: (userName: string) => void;
 	books: IBook[];
 	setBooks: (books: IBook[]) => void;
 	cart: ICart;
@@ -50,7 +48,6 @@ export const AppContext = createContext<IAppContext>({} as IAppContext);
 
 export const AppProvider: React.FC<IAppProvider> = ({ children }) => {
 	const [state, dispatch] = useReducer(reducer, initialState);
-	const [userName, setUserName] = useState("");
 	const [books, setBooks] = useState<IBook[]>([]);
 	const [cart, setCart] = useState<ICart>({ items: [] } as ICart);
 	const [cartGroupedItems, setCartGroupedItems] = useState<
@@ -98,8 +95,6 @@ export const AppProvider: React.FC<IAppProvider> = ({ children }) => {
 	return (
 		<AppContext.Provider
 			value={{
-				userName,
-				setUserName,
 				books,
 				setBooks,
 				cart,

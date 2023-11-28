@@ -2,10 +2,10 @@ import { useContext } from "react";
 import { AppContext } from "../AppContext";
 
 export const PageCheckout = () => {
-	const { userName, cartGroupedItems } = useContext(AppContext);
+	const { state, cartGroupedItems } = useContext(AppContext);
 	return (
 		<>
-			{userName && <p>{userName}, double check your order!</p>}
+			{state.userName && <p>{state.userName}, double check your order!</p>}
 			<div className="mt-4">
 				{cartGroupedItems.map(groupedItem => {
 					return (

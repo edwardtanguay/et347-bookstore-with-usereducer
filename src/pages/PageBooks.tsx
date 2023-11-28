@@ -2,10 +2,10 @@ import { useContext } from "react";
 import { AppContext } from "../AppContext";
 
 export const PageBooks = () => {
-	const { userName, books, handleAddBookToCart, cart } = useContext(AppContext);
+	const { state, books, handleAddBookToCart, cart } = useContext(AppContext);
 	return (
 		<>
-			{userName && <p>Hallo, {userName}, please select your books!</p>}
+			{state.userName && <p>Hallo, {state.userName}, please select your books!</p>}
 
 			<p className="mb-4">There are {books.length} books.</p>
 
