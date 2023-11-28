@@ -7,43 +7,57 @@ import axios from "axios";
 interface IState {
 	userName: string;
 	books: IBook[];
+	cart: ICart;
 }
 
+const initialState = {
+	userName: "",
+	books: [],
+	cart: { items: [] },
+};
+
 interface IStringAction {
-	type: 'setUserName';
+	type: "setUserName";
 	payload: string;
 }
 
 interface IBooksAction {
-	type: 'setBooks';
+	type: "setBooks";
 	payload: IBook[];
 }
 
-const initialState = {
-	userName: '',
-	books: []
+interface IBookAction {
+	type: "addBookToCart";
+	payload: IBook;
 }
 
-const reducer = (state: IState, action: IStringAction | IBooksAction) => {
+const reducer = (
+	state: IState,
+	action: IStringAction | IBooksAction | IBookAction
+) => {
 	const _state = structuredClone(state);
 
 	switch (action.type) {
-		case 'setUserName':
+		case "setUserName":
 			_state.userName = action.payload;
 			break;
-		case 'setBooks':
+		case "setBooks":
 			_state.books = action.payload;
+			break;
+		case "addBookToCart":
+			_state.cart.items.push(action.payload);
+			break;
 	}
 
 	return _state;
-} 
+};
 
 interface IAppContext {
-	cart: ICart;
-	handleAddBookToCart: (book: IBook) => void;
+	// cart: ICart;
+	// handleAddBookToCart: (book: IBook) => void;
 	cartGroupedItems: ICartGroupedItem[];
 	state: IState;
-	dispatch: React.Dispatch<IStringAction>
+	dispatch: React.Dispatch<IStringAction | IBookAction>;
 }
 
 interface IAppProvider {
@@ -56,7 +70,6 @@ export const AppContext = createContext<IAppContext>({} as IAppContext);
 
 export const AppProvider: React.FC<IAppProvider> = ({ children }) => {
 	const [state, dispatch] = useReducer(reducer, initialState);
-	const [cart, setCart] = useState<ICart>({ items: [] } as ICart);
 	const [cartGroupedItems, setCartGroupedItems] = useState<
 		ICartGroupedItem[]
 	>([]);
@@ -65,14 +78,14 @@ export const AppProvider: React.FC<IAppProvider> = ({ children }) => {
 		setTimeout(async () => {
 			const response = await axios.get(booksUrl);
 			const _books = response.data;
-			dispatch({type: 'setBooks', payload: _books})
+			dispatch({ type: "setBooks", payload: _books });
 		}, 0);
 	}, []);
 
 	useEffect(() => {
 		const _cartGroupedItems: ICartGroupedItem[] = [];
 		const countObj: any = {};
-		for (const book of cart.items) {
+		for (const book of state.cart.items) {
 			if (countObj[book.idCode]) {
 				countObj[book.idCode]++;
 			} else {
@@ -91,22 +104,20 @@ export const AppProvider: React.FC<IAppProvider> = ({ children }) => {
 			}
 		}
 		setCartGroupedItems(_cartGroupedItems);
-	}, [cart]);
+	}, [state.cart]);
 
-	const handleAddBookToCart = (book: IBook) => {
-		const _cart = structuredClone(cart);
-		_cart.items.push(book);
-		setCart(_cart);
-	};
+	// const handleAddBookToCart = (book: IBook) => {
+	// 	const _cart = structuredClone(cart);
+	// 	_cart.items.push(book);
+	// 	setCart(_cart);
+	// };
 
 	return (
 		<AppContext.Provider
 			value={{
-				cart,
-				handleAddBookToCart,
 				cartGroupedItems,
-				state, 
-				dispatch
+				state,
+				dispatch,
 			}}
 		>
 			{children}

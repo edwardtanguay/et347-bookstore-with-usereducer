@@ -9,7 +9,7 @@ export const PageCheckout = () => {
 			<div className="mt-4">
 				{cartGroupedItems.map(groupedItem => {
 					return (
-						<div className="flex gap-3 items-center mb-3">
+						<div key={groupedItem.book.idCode} className="flex gap-3 items-center mb-3">
 							<img
 								className="w-12 h-fit cursor-pointer"
 								src={`https://edwardtanguay.vercel.app/share/images/techBooks/${groupedItem.book.idCode}.jpg`}

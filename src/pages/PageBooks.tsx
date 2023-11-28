@@ -2,7 +2,7 @@ import { useContext } from "react";
 import { AppContext } from "../AppContext";
 
 export const PageBooks = () => {
-	const { state, handleAddBookToCart, cart } = useContext(AppContext);
+	const { state, dispatch} = useContext(AppContext);
 	return (
 		<>
 			{state.userName && <p>Hallo, {state.userName}, please select your books!</p>}
@@ -15,10 +15,10 @@ export const PageBooks = () => {
 						<div className="flex flex-col" key={book.id}>
 							<img
 								className="w-40 h-fit cursor-pointer"
-								onClick={() => handleAddBookToCart(book)}
+								onClick={() => dispatch({type:'addBookToCart', payload: book })}
 								src={`https://edwardtanguay.vercel.app/share/images/techBooks/${book.idCode}.jpg`}
 							/>
-							<p className="text-center bg-slate-800 text-yellow-300 pb-1">Ordered: {cart.items.filter(m => m.idCode === book.idCode).length}</p>
+							<p className="text-center bg-slate-800 text-yellow-300 pb-1">Ordered: {state.cart.items.filter(m => m.idCode === book.idCode).length}</p>
 						</div>
 					);
 				})}
