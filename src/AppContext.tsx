@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { createContext, useEffect, useState } from "react";
 import { IBook, ICart, ICartGroupedItem } from "./interfaces";
 import axios from "axios";
@@ -38,9 +39,24 @@ export const AppProvider: React.FC<IAppProvider> = ({ children }) => {
 
 	useEffect(() => {
 		const _cartGroupedItems: ICartGroupedItem[] = [];
-		
+		const countObj: any = {};
 		for (const book of cart.items) {
-			_cartGroupedItems.push({ book, amount: 999 });
+			if (countObj[book.idCode]) {
+				countObj[book.idCode]++;
+			} else {
+				countObj[book.idCode] = 1;
+			}
+		}
+		const properties = Object.entries(countObj);
+		for (const [idCode, _amount] of properties) {
+			const book = books.find((m: IBook) => m.idCode === idCode);
+			const amount = _amount as number;
+			if (book) {
+				_cartGroupedItems.push({
+					book,
+					amount,
+				});
+			}
 		}
 		setCartGroupedItems(_cartGroupedItems);
 	}, [cart]);
