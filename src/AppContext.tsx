@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { createContext, useEffect, useState, useReducer } from "react";
+import { createContext, useEffect, useReducer } from "react";
 import { IBook, ICart, ICartGroupedItem } from "./interfaces";
 import axios from "axios";
 
@@ -8,12 +8,14 @@ interface IState {
 	userName: string;
 	books: IBook[];
 	cart: ICart;
+	cartGroupedItems: ICartGroupedItem[];
 }
 
 const initialState = {
 	userName: "",
 	books: [],
 	cart: { items: [] },
+	cartGroupedItems: []
 };
 
 interface IStringAction {
@@ -31,9 +33,14 @@ interface IBookAction {
 	payload: IBook;
 }
 
+interface ICartGroupedItemsAction {
+	type: "setCartGroupedItems";
+	payload: ICartGroupedItem[];
+}
+
 const reducer = (
 	state: IState,
-	action: IStringAction | IBooksAction | IBookAction
+	action: IStringAction | IBooksAction | IBookAction | ICartGroupedItemsAction
 ) => {
 	const _state = structuredClone(state);
 
@@ -47,17 +54,17 @@ const reducer = (
 		case "addBookToCart":
 			_state.cart.items.push(action.payload);
 			break;
+		case "setCartGroupedItems":
+			_state.cartGroupedItems = action.payload;
+			break;
 	}
 
 	return _state;
 };
 
 interface IAppContext {
-	// cart: ICart;
-	// handleAddBookToCart: (book: IBook) => void;
-	cartGroupedItems: ICartGroupedItem[];
 	state: IState;
-	dispatch: React.Dispatch<IStringAction | IBookAction>;
+	dispatch: React.Dispatch<IStringAction | IBookAction | ICartGroupedItemsAction>;
 }
 
 interface IAppProvider {
@@ -70,9 +77,6 @@ export const AppContext = createContext<IAppContext>({} as IAppContext);
 
 export const AppProvider: React.FC<IAppProvider> = ({ children }) => {
 	const [state, dispatch] = useReducer(reducer, initialState);
-	const [cartGroupedItems, setCartGroupedItems] = useState<
-		ICartGroupedItem[]
-	>([]);
 
 	useEffect(() => {
 		setTimeout(async () => {
@@ -103,19 +107,12 @@ export const AppProvider: React.FC<IAppProvider> = ({ children }) => {
 				});
 			}
 		}
-		setCartGroupedItems(_cartGroupedItems);
+		dispatch({ type: "setCartGroupedItems", payload: _cartGroupedItems });
 	}, [state.cart]);
-
-	// const handleAddBookToCart = (book: IBook) => {
-	// 	const _cart = structuredClone(cart);
-	// 	_cart.items.push(book);
-	// 	setCart(_cart);
-	// };
 
 	return (
 		<AppContext.Provider
 			value={{
-				cartGroupedItems,
 				state,
 				dispatch,
 			}}
