@@ -31,14 +31,14 @@ const reducer = (state: IState, action: IAction) => {
 };
 
 export const PageDemo = () => {
-	const [state] = useReducer(reducer, initialState);
+	const [state, dispatch] = useReducer(reducer, initialState);
 
 	return (
 		<>
 		<h2 className="text-2xl mb-3">Demo of useReducer</h2>
 			<div className="flex gap-3">
-				<button>-</button>
-				<button>+</button>
+				<button onClick={() => dispatch({type: 'decrement', payload: 1})}>-</button>
+				<button onClick={() => dispatch({type: 'increment', payload: 1})}>+</button>
 				<p className="text-xl mt-1">count = {state.count}</p>
 		</div>
 		</>

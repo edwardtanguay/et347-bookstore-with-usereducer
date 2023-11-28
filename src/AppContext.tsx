@@ -34,7 +34,7 @@ export const AppProvider: React.FC<IAppProvider> = ({ children }) => {
 			const response = await axios.get(booksUrl);
 			const _books = response.data;
 			setBooks(_books);
-		}, 2000);
+		}, 0);
 	}, []);
 
 	useEffect(() => {
