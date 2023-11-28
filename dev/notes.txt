@@ -1,9 +1,3 @@
-- .. display books in groups, e.g. "2x bash Cookbook"
-	- x make cartGroupedItems array
-		[
-			{
-				book: {...}
-				amount: 2
-			}
-		]
-	- .. create useEffect that observes cart, when cart changes, recreate cartGroupedItems
+- .. in useContext, replace all useState with useReducer
+	- .. userName
+		- .. enable user to change userName

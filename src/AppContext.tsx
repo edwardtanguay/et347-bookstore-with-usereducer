@@ -1,7 +1,32 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { createContext, useEffect, useState } from "react";
+import { createContext, useEffect, useState, useReducer } from "react";
 import { IBook, ICart, ICartGroupedItem } from "./interfaces";
 import axios from "axios";
+
+interface IState {
+	userName: string;
+}
+
+interface IStringAction {
+	type: 'setUserName';
+	payload: string;
+}
+
+const initialState = {
+	userName: 'nnn'
+}
+
+const reducer = (state: IState, action: IStringAction) => {
+	const _state = structuredClone(state);
+
+	switch (action.type) {
+		case 'setUserName':
+			_state.userName = action.payload;
+			break;
+	}
+
+	return _state;
+} 
 
 interface IAppContext {
 	userName: string;
@@ -11,6 +36,8 @@ interface IAppContext {
 	cart: ICart;
 	handleAddBookToCart: (book: IBook) => void;
 	cartGroupedItems: ICartGroupedItem[];
+	state: IState;
+	dispatch: React.Dispatch<IStringAction>
 }
 
 interface IAppProvider {
@@ -22,6 +49,7 @@ const booksUrl = "https://edwardtanguay.vercel.app/share/techBooks.json";
 export const AppContext = createContext<IAppContext>({} as IAppContext);
 
 export const AppProvider: React.FC<IAppProvider> = ({ children }) => {
+	const [state, dispatch] = useReducer(reducer, initialState);
 	const [userName, setUserName] = useState("");
 	const [books, setBooks] = useState<IBook[]>([]);
 	const [cart, setCart] = useState<ICart>({ items: [] } as ICart);
@@ -77,6 +105,8 @@ export const AppProvider: React.FC<IAppProvider> = ({ children }) => {
 				cart,
 				handleAddBookToCart,
 				cartGroupedItems,
+				state, 
+				dispatch
 			}}
 		>
 			{children}
